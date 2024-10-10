@@ -52,13 +52,13 @@ aberrantSplicing:
     maxTestedDimensionProportion: 6
     genesToTest: null
     ### FRASER1 configuration
-    FRASER_version: "FRASER" 
-    deltaPsiCutoff : 0.3 
-    quantileForFiltering: 0.95 
+    # FRASER_version: "FRASER" 
+    # deltaPsiCutoff : 0.3 
+    # quantileForFiltering: 0.95 
     ### For FRASER2, use the follwing parameters instead of the 3 lines above:
-    # FRASER_version: "FRASER2"
-    # deltaPsiCutoff : 0.1
-    # quantileForFiltering: 0.75
+    FRASER_version: "FRASER2"
+    deltaPsiCutoff : 0.1
+    quantileForFiltering: 0.75
 
 mae:
     run: true
@@ -68,7 +68,7 @@ mae:
         - group3
     gatkIgnoreHeaderCheck: true
     padjCutoff: 0.05
-    allelicRatioCutoff: 0.8
+    allelicRatioCutoff: 0
     addAF: true
     maxAF: 0.001
     maxVarFreqCohort: 0.05

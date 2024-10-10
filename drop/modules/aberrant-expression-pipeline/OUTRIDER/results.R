@@ -16,6 +16,7 @@
 #'  output:
 #'   - results: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results.tsv"`'
 #'   - results_all: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results_all.Rds"`'
+#'   - results_all_tsv: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results_all.tsv.gz"`'
 #'  type: script
 #'---
 
@@ -37,7 +38,16 @@ res <- results(ods, padjCutoff = snakemake@params$padjCutoff,
 # Add fold change
 res[, foldChange := round(2^l2fc, 2)]
 
+# Add Info
+sa <- fread(snakemake@config$sampleAnnotation, 
+              colClasses = c(RNA_ID = 'character', DNA_ID = 'character'))
+res <- merge(res, sa[, .(batch, project)])
+
 # Save all the results and significant ones
+praw_cols <- grep("pValue", colnames(res), value=TRUE)
+res <- res[do.call(pmin, c(res[,praw_cals, with=FALSE], list(na.rm = TRUE))) 
+                <= 0.05 ]
+fwrite(res, snakemake@output$results_all_tsv, sep = "\t", quote = F)
 saveRDS(res, snakemake@output$results_all)
 
 # Subset to significant results
