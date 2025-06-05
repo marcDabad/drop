@@ -42,7 +42,7 @@ def installRPackages(config: DropConfig = None):
 
         pkg_mafdb_name = config.genome.getMafDbName()
 
-        check_mae = config.get("mae").get("run") and config.get("mae").get("addAF") 
+        check_mae = config.get("mae").get("run") and config.get("mae").get("addAF")
         check_rnaVariantCalling = config.get("rnaVariantCalling").get("run") and config.get("rnaVariantCalling").get("addAF")
 
         if pkg_mafdb_name is not None and (check_mae or check_rnaVariantCalling):

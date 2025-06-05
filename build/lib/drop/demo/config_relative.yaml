@@ -1,0 +1,95 @@
+projectTitle: Detection of RNA Outlier Pipeline
+htmlOutputPath: Output/html
+indexWithFolderName: true
+root: Output
+sampleAnnotation: Data/sample_annotation.tsv
+geneAnnotation:
+  v29: Data/gencode_annotation_trunc.gtf
+genomeAssembly: hg19
+genome: 
+  ncbi: Data/chr21_ncbi.fa
+  ucsc: Data/chr21.fa
+hpoFile: null
+random_seed: true
+exportCounts:
+  geneAnnotations:
+  - v29
+  excludeGroups:
+    - mae
+    - outrider_external
+    - fraser_external
+
+aberrantExpression:
+    run: true
+    groups:
+      - outrider
+      - outrider_external
+    fpkmCutoff: 1
+    implementation: autoencoder
+    padjCutoff: 1
+    zScoreCutoff: 0
+    genesToTest: "Data/genes_to_test.yaml"
+    maxTestedDimensionProportion: 3
+    yieldSize: 2000000
+    useOHTtoObtainQ: true
+
+aberrantSplicing:
+    run: true
+    groups:
+      - fraser
+      - fraser_external
+    recount: true
+    longRead: false
+    keepNonStandardChrs: false
+    filter: false
+    minExpressionInOneSample: 20
+    quantileMinExpression: 10  
+    minDeltaPsi: 0.05
+    implementation: PCA
+    padjCutoff: 1 
+    maxTestedDimensionProportion: 6
+    genesToTest: "Data/genes_to_test.yaml"
+    useOHTtoObtainQ: true
+    ### FRASER2 configuration for demo dataset
+    FRASER_version: "FRASER2"
+    deltaPsiCutoff: 0.05 
+    quantileForFiltering: 0.95
+
+mae:
+    run: true
+    groups:
+      - mae
+    gatkIgnoreHeaderCheck: true
+    padjCutoff: .5
+    allelicRatioCutoff: 0.7
+    addAF: false
+    maxAF: .001
+    maxVarFreqCohort: 1
+    # VCF-BAM matching
+    qcVcf: Data/qc_vcf_1000G.vcf.gz
+    qcGroups:
+      - mae
+    dnaRnaMatchCutoff: 0.85
+
+rnaVariantCalling:
+    run: true
+    groups:
+      - batch_0
+      - batch_1
+    highQualityVCFs:
+      - Data/high_confidence_snps.vcf.gz
+      - Data/high_confidence_indels.vcf.gz
+    dbSNP: Data/dbSNP_chr21.vcf.gz
+    repeat_mask: Data/repeat_mask_chr21.bed
+    createSingleVCF: true
+    addAF: false
+    maxAF: 0.001
+    maxVarFreqCohort: 1
+    hcArgs: null
+    minAlt: 3
+    yieldSize: 100000
+
+tools:
+  gatkCmd: gatk
+  bcftoolsCmd: bcftools
+  samtoolsCmd: samtools

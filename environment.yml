@@ -1,4 +1,4 @@
-name: drop_test
+name: drop_marc
 channels:
   - conda-forge
   - bioconda
