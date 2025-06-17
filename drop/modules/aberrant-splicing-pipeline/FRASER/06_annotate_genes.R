@@ -49,9 +49,17 @@ seqlevelsStyle(orgdb$seqnames) <- seqlevels_fds
 seqlevelsStyle(txdb) <- seqlevels_fds
 
 # Annotate the fds with gene names and save it as a new object
-fds_input <- annotateRangesWithTxDb(fds_input, txdb = txdb, orgDb = orgdb, 
+
+if ('hgnc_symbol' %in% names(orgdb)){
+    fds_input <- annotateRangesWithTxDb(fds_input, txdb = txdb, orgDb = orgdb, 
                     feature = 'gene_name', featureName = 'hgnc_symbol', 
                     keytype = 'gene_id')
+}else{
+    fds_input <- annotateRangesWithTxDb(fds_input, txdb = txdb, orgDb = orgdb, 
+                    feature = 'gene_name', featureName = 'gene_name_orig', 
+                    keytype = 'gene_id')
+}
+
 
 # add basic annotations for overlap with the reference annotation
 # run this function before creating the results table to include it there
