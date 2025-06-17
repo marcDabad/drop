@@ -60,7 +60,12 @@ sa <- fread(snakemake@config$sampleAnnotation,
               colClasses = c(RNA_ID = 'character', DNA_ID = 'character'))
 if(!is.null(sa$HPO_TERMS) & nrow(res) > 0){
   if(!all(is.na(sa$HPO_TERMS)) & ! all(sa$HPO_TERMS == '')){
-    res <- add_HPO_cols(res, hpo_file = snakemake@params$hpoFile)
+    if (("hgncSymbol" %in% colnames(res))){
+      res <- add_HPO_cols(res, hpo_file = snakemake@params$hpoFile)
+    }else{
+      res <- add_HPO_cols(res, gene_name_col='geneID', hpo_file = snakemake@params$hpoFile)
+    }
+    
   }
 }
 
