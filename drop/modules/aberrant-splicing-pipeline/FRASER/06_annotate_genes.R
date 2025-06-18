@@ -53,6 +53,10 @@ seqlevelsStyle(txdb) <- seqlevels_fds
 if ('hgnc_symbol' %in% names(orgdb)){
     orgdb$hgnc_symbol <- orgdb$gene_name_orig
 }
+if (any(is.na(orgdb$gene_id))){
+    orgdb$gene_id <- orgdb$gene_name_orig
+}
+
 fds_input <- annotateRangesWithTxDb(fds_input, txdb = txdb, orgDb = orgdb, 
                 feature = 'gene_name', featureName = 'hgnc_symbol', 
                 keytype = 'gene_id')
