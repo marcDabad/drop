@@ -15,6 +15,7 @@
 #'  output:
 #'   - results: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results.tsv"`'
 #'   - results_all: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results_all.Rds"`'
+#'   - results_all_tsv: '`sm cfg.getProcessedResultsDir() + "/aberrant_expression/{annotation}/outrider/{dataset}/OUTRIDER_results_all.tsv"`'
 #'  type: script
 #'---
 
@@ -36,8 +37,14 @@ res <- results(ods, padjCutoff = snakemake@params$padjCutoff,
 # Add fold change
 res[, foldChange := round(2^l2fc, 2)]
 
+
+#Add info
+
+res <- merge(res, sa[, .("BATCH")])
+
 # Save all the results and significant ones
 saveRDS(res, snakemake@output$results_all)
+fwrite(res, snakemake@output$results_all_tsv, sep = "\t", quote = F)
 
 # Subset to significant results
 padj_cols <- grep("padjust", colnames(res), value=TRUE)

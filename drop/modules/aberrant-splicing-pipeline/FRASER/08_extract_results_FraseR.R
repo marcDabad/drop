@@ -67,6 +67,7 @@ res_gene <- results(fds, psiType=psiTypes,
                     aggregate=TRUE, collapse=FALSE,
                     all=TRUE)
 res_genes_dt   <- as.data.table(res_gene)
+
 print('Results per gene extracted')
 write_tsv(res_genes_dt, file=snakemake@output$resultTableGene_full)
 
